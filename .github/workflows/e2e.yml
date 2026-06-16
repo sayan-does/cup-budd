@@ -1,0 +1,46 @@
+name: E2E Infrastructure
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      E2E_TESTS: "1"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      ZAFRONIX_API_KEY: ${{ secrets.ZAFRONIX_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: pytest tests/test_e2e_infra.py -v
+
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install httpx
+      - name: Check health endpoint
+        run: |
+          python -c "
+          import httpx
+          r = httpx.get('${{ secrets.HEALTH_ENDPOINT_URL }}', timeout=10)
+          data = r.json()
+          assert r.status_code == 200, f'Status: {r.status_code}'
+          assert data['status'] in ('ok', 'degraded'), f'Status: {data[\"status\"]}'
+          print(f'Health OK: {data}')
+          "

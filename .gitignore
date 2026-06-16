@@ -1,8 +1,13 @@
 .opencode/
 .cursor
 docs/
-backend/tests/
-frontend/e2e/
 scripts/
-**/test-*
-**/tests/
+**/__pycache__/
+**/node_modules/
+**/.venv/
+**/test-results/
+**/test-reports/
+*.db
+*.egg-info/
+**/supabase/
+**/.temp/

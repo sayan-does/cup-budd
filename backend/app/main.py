@@ -12,15 +12,17 @@ from app.jobs import fixture_sync, scheduler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize DB synchronously for startup checks
-    await init_db()
-    async with async_session_maker() as db:
-        await db.execute(__import__("sqlalchemy").text("SELECT 1"))
+    try:
+        await init_db()
+        async with async_session_maker() as db:
+            await db.execute(__import__("sqlalchemy").text("SELECT 1"))
+    except Exception as e:
+        print(f"WARN: DB unavailable at startup — {e}. App will run in degraded mode.")
 
-    # Run fixture sync in the background so slow external calls don't block
-    # the ASGI lifespan. The background task will create its own DB session
-    # when called without a session (run_fixture_sync handles db=None).
-    asyncio.create_task(fixture_sync.run_fixture_sync())
+    try:
+        asyncio.create_task(fixture_sync.run_fixture_sync())
+    except Exception as e:
+        print(f"WARN: fixture_sync task failed to start — {e}")
 
     scheduler.start()
     yield
