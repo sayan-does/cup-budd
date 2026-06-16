@@ -1,7 +1,7 @@
 import asyncio
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-import logging
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -85,7 +85,7 @@ async def list_teams(
         origin = request.headers.get("origin") if request else None
         logger.info(
             "list_teams called from client=%s origin=%s path=%s",
-            getattr(request.client, 'host', None) if request else None,
+            getattr(request.client, "host", None) if request else None,
             origin,
             request.url.path if request else None,
         )
