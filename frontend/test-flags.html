@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+        }
+        .flag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .flag-item {
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #000;
+            background: white;
+        }
+        .flag-item img {
+            width: 64px;
+            height: 48px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+        .flag-item p {
+            margin: 8px 0 0 0;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        button {
+            background: #000;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #333;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #000;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏴 Flag Loading Test Page</h1>
+        
+        <div class="test-section">
+            <h2>Status</h2>
+            <div id="status" class="status">Loading...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>Actions</h2>
+            <button onclick="testAPI()">Test API Connection</button>
+            <button onclick="testFlags()">Load Flags from API</button>
+            <button onclick="testDirectFlags()">Test Direct FlagCDN URLs</button>
+        </div>
+
+        <div class="test-section">
+            <h2>API Response</h2>
+            <pre id="api-response">Click "Test API Connection" to see response</pre>
+        </div>
+
+        <div class="test-section">
+            <h2>Flags from API</h2>
+            <div id="flags-from-api" class="flag-grid"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Direct FlagCDN Test (Sample Countries)</h2>
+            <div id="direct-flags" class="flag-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+
+        async function testAPI() {
+            const statusEl = document.getElementById('status');
+            const responseEl = document.getElementById('api-response');
+            
+            statusEl.className = 'status';
+            statusEl.textContent = 'Testing API connection...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/teams`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const teams = await response.json();
+                
+                // Check if teams have logo_url
+                const teamsWithLogos = teams.filter(t => t.logo_url);
+                const teamsWithoutLogos = teams.filter(t => !t.logo_url);
+                
+                statusEl.className = 'status success';
+                statusEl.innerHTML = `
+                    ✓ API Connected Successfully!<br>
+                    Total teams: ${teams.length}<br>
+                    Teams with logos: ${teamsWithLogos.length}<br>
+                    Teams without logos: ${teamsWithoutLogos.length}
+                `;
+                
+                responseEl.textContent = JSON.stringify(teams.slice(0, 3), null, 2);
+                
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.innerHTML = `✗ API Connection Failed<br>${error.message}`;
+                responseEl.textContent = `Error: ${error.message}\n\nMake sure backend is running on port 8000`;
+            }
+        }
+
+        async function testFlags() {
+            const container = document.getElementById('flags-from-api');
+            container.innerHTML = '<p>Loading flags from API...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/teams`);
+                const teams = await response.json();
+                
+                container.innerHTML = '';
+                
+                teams.slice(0, 12).forEach(team => {
+                    const item = document.createElement('div');
+                    item.className = 'flag-item';
+                    
+                    if (team.logo_url) {
+                        item.innerHTML = `
+                            <img src="${team.logo_url}" 
+                                 alt="${team.name}" 
+                                 onerror="this.style.border='3px solid red'; this.alt='Failed'">
+                            <p>${team.name}</p>
+                            <small style="color: #666;">${team.code}</small>
+                        `;
+                    } else {
+                        item.innerHTML = `
+                            <div style="width:64px;height:48px;background:#ddd;display:flex;align-items:center;justify-content:center;margin:0 auto;">
+                                No Logo
+                            </div>
+                            <p>${team.name}</p>
+                        `;
+                    }
+                    
+                    container.appendChild(item);
+                });
+                
+            } catch (error) {
+                container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        function testDirectFlags() {
+            const container = document.getElementById('direct-flags');
+            
+            const sampleFlags = [
+                { code: 'br', name: 'Brazil' },
+                { code: 'ar', name: 'Argentina' },
+                { code: 'de', name: 'Germany' },
+                { code: 'fr', name: 'France' },
+                { code: 'es', name: 'Spain' },
+                { code: 'gb-eng', name: 'England' },
+                { code: 'us', name: 'USA' },
+                { code: 'mx', name: 'Mexico' },
+                { code: 'jp', name: 'Japan' },
+                { code: 'kr', name: 'South Korea' },
+                { code: 'ca', name: 'Canada' },
+                { code: 'au', name: 'Australia' }
+            ];
+            
+            container.innerHTML = '';
+            
+            sampleFlags.forEach(flag => {
+                const item = document.createElement('div');
+                item.className = 'flag-item';
+                item.innerHTML = `
+                    <img src="https://flagcdn.com/w320/${flag.code}.png" 
+                         alt="${flag.name}"
+                         onerror="this.style.border='3px solid red'; this.alt='Failed'">
+                    <p>${flag.name}</p>
+                    <small style="color: #666;">${flag.code}</small>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            testAPI();
+            testDirectFlags();
+        });
+    </script>
+</body>
+</html>

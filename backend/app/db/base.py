@@ -1,0 +1,9 @@
+from app.db.models import Base  # noqa: F401
+from app.db.models.fixtures import Fixture  # noqa: F401
+from app.db.models.generated_notifications import GeneratedNotification  # noqa: F401
+from app.db.models.match_events import MatchEvent  # noqa: F401
+from app.db.models.notification_preferences import NotificationPreference  # noqa: F401
+from app.db.models.reminder_dispatches import ReminderDispatch  # noqa: F401
+from app.db.models.teams import Team  # noqa: F401
+from app.db.models.user_notifications import UserNotification  # noqa: F401
+from app.db.models.users import User  # noqa: F401

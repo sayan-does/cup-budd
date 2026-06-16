@@ -1,0 +1,15 @@
+[Unit]
+Description=Cup Budd API
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=cup-budd
+WorkingDirectory=/opt/cup-budd/backend
+EnvironmentFile=/opt/cup-budd/.env
+ExecStart=/opt/cup-budd/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

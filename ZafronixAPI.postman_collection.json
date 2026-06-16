@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "Zafronix World Cup API",
+    "description": "Collection for the Zafronix World Cup API (replacing worldcupapi.com)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "API_KEY",
+      "value": "zwc_free_63b8c4a3b9f092dda21a1e7a",
+      "type": "string"
+    },
+    {
+      "key": "BASE_URL",
+      "value": "https://api.zafronix.com/fifa/worldcup/v1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/health"
+          }
+        },
+        {
+          "name": "List Tournaments",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/tournaments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Required",
+      "item": [
+        {
+          "name": "Tournament 2026",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/tournaments/2026",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Teams 2026",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/teams?tournament=2026",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Team Roster (Argentina 2022)",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/teams/Argentina/roster?year=2022",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Matches 2026",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/matches?year=2026",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Match Detail (1986 Final)",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/matches/1986-052?denormalize=true",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Standings Group A",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/standings?year=2026&group=A",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Stadiums Mexico",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/stadiums?country=mx",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Search Messi",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/search?q=Messi",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "On This Day",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/on-this-day",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Usage",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/me/usage",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Bracket 2026",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/bracket?year=2026",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        },
+        {
+          "name": "Compare Tournaments",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/compare?years=1986,2022",
+            "header": [{"key": "X-API-Key", "value": "{{API_KEY}}"}]
+          }
+        }
+      ]
+    }
+  ]
+}

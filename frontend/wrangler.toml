@@ -1,0 +1,10 @@
+name = "cup-budd"
+compatibility_date = "2026-06-12"
+
+pages_build_output_dir = "dist"
+
+[env.production]
+vars = { VITE_API_BASE_URL = "https://api.cupbudd.com/api/v1" }
+
+[env.preview]
+vars = { VITE_API_BASE_URL = "https://api-staging.cupbudd.com/api/v1" }

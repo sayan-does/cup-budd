@@ -1,0 +1,2 @@
+{% set winner = home_team_name if home_score > away_score else away_team_name %}{{ home_team_name }} {{ home_score }}-{{ away_score }} {{ away_team_name }} — Full Time
+{{ winner }} finish {{ home_standing_position }} in Group {{ group }} with {{ home_standing_points }} points. Form: {{ home_form | join(", ") }}.
