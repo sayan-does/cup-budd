@@ -1,8 +1,8 @@
-import pytest
 from datetime import datetime
-from sqlalchemy import select
 
-from app.db.models import Team, Fixture
+import pytest
+
+from app.db.models import Fixture, Team
 from app.services.kickoff import IST
 
 

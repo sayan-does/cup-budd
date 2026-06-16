@@ -117,10 +117,6 @@ async def _sync(db: AsyncSession) -> None:
         upserted += 1
 
     await db.commit()
-    # mark incomplete if any stage fetch failed or teams have incomplete fixtures
-    sync_complete = not failed_stages and all(
-        t for t in team_name_map.keys()
-    )
     logger.info(
         "Fixture sync complete: teams=%d fetched=%d upserted=%d skipped_team_mismatch=%d teams_incomplete=%d failed_stages=%s",
         len(teams_data),

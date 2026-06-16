@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.db.models import Base, Fixture, Team
-from app.services.kickoff import IST, now_ist
+from app.services.kickoff import now_ist
 from app.services.status_reconciliation import reconcile_stale_fixtures
 
 TEST_DATABASE_URL = "sqlite+aiosqlite://"

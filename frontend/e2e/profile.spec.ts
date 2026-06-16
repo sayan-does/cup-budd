@@ -97,7 +97,6 @@ test.describe('Profile page', () => {
   test('toggles a notification preference', async ({ page }) => {
     const diag = capturePageDiagnostics(page);
 
-    let prefsUpdated = false;
     await page.route(/\/api\/v1\/teams/, async (route) => {
       await route.fulfill({
         status: 200,

@@ -2,8 +2,6 @@ import { test, expect } from '@playwright/test';
 import {
   capturePageDiagnostics,
   saveDiagnostics,
-  injectAuthenticatedUser,
-  MOCK_USER_STATE_ONBOARDING_INCOMPLETE,
 } from './helpers';
 
 const TEST_EMAIL = `e2e-${Date.now()}@test.com`;

@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta
 
-import pytest
-
 from app.db.models import Fixture
 from app.services.kickoff import IST, parse_kickoff_ist
 from app.services.match_buckets import classify_bucket

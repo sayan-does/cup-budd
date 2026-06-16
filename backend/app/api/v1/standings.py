@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-
-from app.db.session import get_db
-from app.db.models import Team
-from app.services.zafronix_client import zafronix_client
 import asyncio
-from app.services.cache import redis_cache
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.models import Team
+from app.db.session import get_db
 from app.schemas.teams import StandingEntry, TeamResponse
+from app.services.cache import redis_cache
+from app.services.zafronix_client import zafronix_client
 
 router = APIRouter(prefix="/standings", tags=["standings"])
 

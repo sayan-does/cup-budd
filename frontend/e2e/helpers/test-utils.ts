@@ -102,6 +102,7 @@ export async function saveDiagnostics(
       contentType: 'image/png',
     });
   } catch {
+    // screenshot best-effort
   }
 }
 

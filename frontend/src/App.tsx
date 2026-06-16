@@ -1,11 +1,10 @@
-import { Suspense, lazy } from 'react';
+import { ComponentType, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GuardedRoute, { RequireNotOnboarded } from './components/GuardedRoute';
 
 // Wrap dynamic imports so a failed import shows a user-friendly error component
-const safeImport = (loader: () => Promise<any>) =>
+const safeImport = (loader: () => Promise<{ default: ComponentType }>) =>
   loader().catch((err) => {
-    // eslint-disable-next-line no-console
     console.error('Dynamic import failed', err);
     return {
       default: () => (

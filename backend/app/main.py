@@ -1,10 +1,10 @@
-from contextlib import asynccontextmanager
 import asyncio
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import health, matches, push, teams, users
+from app.api.v1 import health, matches, push, standings, teams, users
 from app.config import settings
 from app.db.session import async_session_maker, init_db
 from app.jobs import fixture_sync, scheduler
@@ -38,9 +38,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for r in (users.router, teams.router, matches.router, push.router, health.router):
+for r in (users.router, teams.router, matches.router, push.router, health.router, standings.router):
     app.include_router(r, prefix="/api/v1")
-
-# include standings endpoint
-from app.api.v1.standings import router as standings_router
-app.include_router(standings_router, prefix="/api/v1")

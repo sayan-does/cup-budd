@@ -11,7 +11,7 @@ class IntersectionObserverMock {
   unobserve() {}
   disconnect() {}
 }
-window.IntersectionObserver = IntersectionObserverMock as any;
+window.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

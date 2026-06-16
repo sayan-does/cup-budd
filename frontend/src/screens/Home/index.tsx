@@ -47,7 +47,6 @@ function Home() {
 
   // debug info
   React.useEffect(() => {
-    // eslint-disable-next-line no-console
     console.debug('Home queries', { team: teamQuery.data, recent: recentQuery.data, nextFallback: nextMatchQuery.data });
   }, [teamQuery.data, recentQuery.data, nextMatchQuery.data]);
 
@@ -123,11 +122,9 @@ function Home() {
 
   // Debug: print why we chose a particular primary match (dev-only)
   if (import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
     const now = Date.now();
     const nextFixtureTime = nextFixture ? new Date(nextFixture.datetime).getTime() : null;
     const recentMatchTime = recentMatch ? new Date(recentMatch.datetime).getTime() : null;
-    // eslint-disable-next-line no-console
     console.debug('Home primary match decision', {
       nowISO: new Date(now).toISOString(),
       nowEpoch: now,

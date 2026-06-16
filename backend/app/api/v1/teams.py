@@ -1,12 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
 import asyncio
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Fixture, Team
 from app.db.session import get_db
 from app.schemas.matches import TeamSummary
-from app.schemas.teams import MatchSummary, StandingInfo, TeamDetailResponse, TeamResponse, StandingEntry
+from app.schemas.teams import (
+    MatchSummary,
+    StandingEntry,
+    StandingInfo,
+    TeamDetailResponse,
+    TeamResponse,
+)
 from app.services.cache import redis_cache
 from app.services.kickoff import now_ist
 from app.services.match_buckets import classify_bucket

@@ -29,7 +29,6 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   });
   // Dev-only request logging to help debug missing data
   if (import.meta.env.DEV && import.meta.env.VITE_DEBUG_API === 'true') {
-    // eslint-disable-next-line no-console
     console.debug('API request', { method, url: `${baseUrl}${path}` });
   }
 
@@ -59,7 +58,6 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
       } catch {
         parsed = text;
       }
-      // eslint-disable-next-line no-console
       console.debug('API response', { url: `${baseUrl}${path}`, status: res.status, body: parsed });
     } catch (e) {
       // ignore logging errors

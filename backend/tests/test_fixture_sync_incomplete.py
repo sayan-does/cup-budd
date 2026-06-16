@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import AsyncMock, patch
+
+import pytest
 from sqlalchemy import select
 
 from app.db.models import Fixture, Team

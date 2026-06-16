@@ -62,7 +62,6 @@ export function fetchTeam(id: number): Promise<TeamDetail> {
   // slow external dependency), fall back to the teams list and synthesize
   // a minimal TeamDetail so the UI can render without blocking.
   return get<TeamDetail>(`/teams/${id}`).catch(async (err) => {
-    // eslint-disable-next-line no-console
     console.warn('fetchTeam: team detail failed, falling back to teams list', err);
     const teams = await fetchTeams();
     const t = teams.find((x) => x.id === id);

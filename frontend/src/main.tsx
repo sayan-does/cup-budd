@@ -12,11 +12,9 @@ async function startApp() {
     try {
       const { worker } = await import('./mocks/browser');
       await worker.start({ onUnhandledRequest: 'bypass' });
-      // eslint-disable-next-line no-console
       console.info('MSW worker started (dev mocks enabled)');
     } catch (e) {
       // MSW failed to start - fallback to real backend
-      // eslint-disable-next-line no-console
       console.info('MSW not available, using real backend', e);
     }
   }
@@ -36,7 +34,6 @@ const queryClient = new QueryClient({
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   navigator.serviceWorker.register('/sw.js').catch((err) => {
     // Surface a warning but avoid crashing the app
-    // eslint-disable-next-line no-console
     console.warn('Service worker registration failed:', err);
   });
 }

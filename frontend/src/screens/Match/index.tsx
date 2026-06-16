@@ -63,7 +63,6 @@ function Match() {
 
   // If this is a finished match but there are no events, show a helpful note and log the response
   if (data.status === 'finished' && (!data.events || data.events.length === 0)) {
-    // eslint-disable-next-line no-console
     console.debug('Match has no events', { matchId: data.id, events: data.events });
   }
 
