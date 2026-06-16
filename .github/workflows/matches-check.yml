@@ -1,0 +1,54 @@
+name: Matches API Check
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 9 * * *' # daily at 09:00 UTC
+
+jobs:
+  check-matches:
+    name: Check matches list exhausted
+    runs-on: ubuntu-latest
+    env:
+      API_BASE_URL: https://cup-budd.onrender.com
+      REQUEST_LIMIT: 50
+    steps:
+      - name: Call matches endpoint
+        run: |
+          set -euo pipefail
+          echo "Requesting $API_BASE_URL/api/v1/matches?limit=$REQUEST_LIMIT"
+          http_code=$(curl -sS -o response.json -w "%{http_code}" "$API_BASE_URL/api/v1/matches?limit=$REQUEST_LIMIT") || true
+          echo "HTTP status: $http_code"
+          if [ "$http_code" -ne 200 ]; then
+            echo "ERROR: non-200 response"
+            cat response.json || true
+            exit 1
+          fi
+
+          # Count items in the returned JSON array
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "jq not found; installing"
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
+          count=$(jq 'if type=="array" then length else (if has("items") and (.items|type=="array") then .items|length else -1 end) end' response.json)
+          if [ "$count" -lt 0 ]; then
+            echo "ERROR: unexpected JSON shape; response:";
+            cat response.json
+            exit 1
+          fi
+
+          echo "Matches returned: $count (requested $REQUEST_LIMIT)"
+          if [ "$count" -lt "$REQUEST_LIMIT" ]; then
+            echo "EXHAUSTED=true"
+          else
+            echo "EXHAUSTED=false"
+          fi
+
+      - name: Upload raw response
+        uses: actions/upload-artifact@v4
+        with:
+          name: matches-response
+          path: response.json
