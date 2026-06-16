@@ -33,7 +33,15 @@ app = FastAPI(title="Cup Budd API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    # Prefer an explicit allow_origin_regex when configured. This lets us
+    # accept provider preview subdomains (eg. Vercel) without updating the
+    # env var on every preview deploy. When not set we fall back to the
+    # explicit allow_origins list.
+    **(
+        {"allow_origin_regex": settings.cors_origin_regex_or_none}
+        if settings.cors_origin_regex_or_none
+        else {"allow_origins": settings.cors_origins_list}
+    ),
     allow_methods=["*"],
     allow_headers=["*"],
 )

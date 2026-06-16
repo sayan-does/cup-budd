@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     app_env: str = Field(default="development", alias="APP_ENV")
     api_base_url: str = Field(default="http://localhost:8000", alias="API_BASE_URL")
     cors_origins: str = Field(default="http://localhost:5173", alias="CORS_ORIGINS")
+    cors_origin_regex: str = Field(default="", alias="CORS_ORIGIN_REGEX")
 
     database_url: str = Field(alias="DATABASE_URL")
     database_url_test: str = Field(default="", alias="DATABASE_URL_TEST")
@@ -36,6 +37,16 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def cors_origin_regex_or_none(self) -> str | None:
+        """Return the configured CORS origin regex or None when unset/empty.
+
+        This is used by the application to conditionally pass allow_origin_regex
+        to FastAPI's CORSMiddleware. Keeping this helper keeps template logic
+        concise in main.py.
+        """
+        return self.cors_origin_regex.strip() or None
 
 
 settings = Settings()
