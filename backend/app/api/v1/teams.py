@@ -1,6 +1,7 @@
 import asyncio
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+import logging
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -76,7 +77,21 @@ def _build_match_summary(fixture: Fixture, home_team: Team, away_team: Team) -> 
 async def list_teams(
     group: str | None = Query(default=None),
     db: AsyncSession = Depends(get_db),
+    request: Request = None,
 ) -> list[TeamResponse]:
+    # Log incoming request details to help diagnose missing frontend calls.
+    try:
+        logger = logging.getLogger("app.teams")
+        origin = request.headers.get("origin") if request else None
+        logger.info(
+            "list_teams called from client=%s origin=%s path=%s",
+            getattr(request.client, 'host', None) if request else None,
+            origin,
+            request.url.path if request else None,
+        )
+    except Exception:
+        # Don't let logging failures affect the endpoint
+        pass
     stmt = select(Team)
     if group:
         stmt = stmt.where(Team.group == group)
