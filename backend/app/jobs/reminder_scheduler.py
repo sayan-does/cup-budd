@@ -1,3 +1,5 @@
+import logging
+
 from datetime import datetime, timedelta
 
 from sqlalchemy import and_, select
@@ -9,13 +11,18 @@ from app.services.kickoff import now_ist
 from app.services.notification_templates import render_match_reminder
 from app.services.push_delivery import create_and_fan_out
 
+logger = logging.getLogger(__name__)
+
 
 async def run_reminder_check(db: AsyncSession | None = None, now: datetime | None = None) -> None:
-    if db is None:
-        async with async_session_maker() as session:
-            await _check(session, now or now_ist())
-    else:
-        await _check(db, now or now_ist())
+    try:
+        if db is None:
+            async with async_session_maker() as session:
+                await _check(session, now or now_ist())
+        else:
+            await _check(db, now or now_ist())
+    except Exception as exc:
+        logger.warning("Reminder check skipped (DB unavailable): %s", exc)
 
 
 async def _check(db: AsyncSession, now: datetime) -> None:

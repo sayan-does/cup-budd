@@ -14,11 +14,14 @@ CURRENT_YEAR = 2026
 
 
 async def run_fixture_sync(db: AsyncSession | None = None) -> None:
-    if db is None:
-        async with async_session_maker() as session:
-            await _sync(session)
-    else:
-        await _sync(db)
+    try:
+        if db is None:
+            async with async_session_maker() as session:
+                await _sync(session)
+        else:
+            await _sync(db)
+    except Exception as exc:
+        logger.warning("Fixture sync skipped (DB unavailable): %s", exc)
 
 
 async def _sync(db: AsyncSession) -> None:

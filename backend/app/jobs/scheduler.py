@@ -1,3 +1,5 @@
+import logging
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
@@ -5,6 +7,8 @@ from app.config import settings
 from app.jobs.fixture_sync import run_fixture_sync
 from app.jobs.live_poller import current_interval, run_live_poller
 from app.jobs.reminder_scheduler import run_reminder_check
+
+logger = logging.getLogger(__name__)
 
 scheduler = AsyncIOScheduler(
     job_defaults={
